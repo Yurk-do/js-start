@@ -1,0 +1,19 @@
+{
+  "name": "js-start",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yurk-do/js-start.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yurk-do/js-start/issues"
+  },
+  "homepage": "https://github.com/Yurk-do/js-start#readme"
+}
