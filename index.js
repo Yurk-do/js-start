@@ -140,10 +140,8 @@ console.log("+++++++++++++++++++++++++++++++++++++++++++");
 // 4. Средний возраст.
 
 let sum = 0;
-let count = 0;
 for (let i = 0; i < profiles.length; i += 1) {
   const age = 2020 - profiles[i].birthDay.getFullYear();
   sum += age;
-  count += 1;
 }
-console.log(`Средний возраст = ${Math.round(sum / count)}`);
+console.log(`Средний возраст = ${Math.round(sum / profiles.length)}`);
