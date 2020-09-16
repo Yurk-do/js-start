@@ -118,11 +118,22 @@ const oldYoungPerson = (array, oldYoung) => {
   return age;
 };
 
-const youngPerson = ["Самый молодой человек:"];
-youngPerson.push(oldYoungPerson(profiles, "young"));
-const oldPerson = ["Самый старый человек:"];
-oldPerson.push(oldYoungPerson(profiles, "old"));
-console.log(youngPerson, oldPerson);
+const youngPerson = oldYoungPerson(profiles, "young");
+const oldPerson = oldYoungPerson(profiles, "old");
+
+const objKeysValuesOutput = (object, title = "здесь мог бы быть заголовок") => {
+  const a = Object.keys(object);
+  const b = Object.values(object);
+  console.log(title);
+  for (let i = 0; i < a.length; i += 1) {
+    console.log(`${a[i]} = ${b[i]}`);
+  }
+};
+
+objKeysValuesOutput(youngPerson, "Самый молодой человек:");
+objKeysValuesOutput(oldPerson, "Самый старый человек:");
+
+// console.log(youngPerson, oldPerson);
 
 console.log("+++++++++++++++++++++++++++++++++++++++++++");
 
