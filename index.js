@@ -2,7 +2,9 @@
 
 // 1. Создание анкет.
 
-const baseFirstName = [
+// Мужские ФИО
+
+const baseFirstNameMale = [
   "Андрей",
   "Виктор",
   "Геннадий",
@@ -16,7 +18,7 @@ const baseFirstName = [
   "Степан",
   "Глеб",
 ];
-const baseMiddleName = [
+const baseMiddleNameMale = [
   "Степанович",
   "Максимович",
   "Геннадьевич",
@@ -30,7 +32,7 @@ const baseMiddleName = [
   "Владиславович",
   "Дмитриевич",
 ];
-const baseLastName = [
+const baseLastNameMale = [
   "Жуков",
   "Дибров",
   "Слепаков",
@@ -45,23 +47,70 @@ const baseLastName = [
   "Суслов",
 ];
 
-const createProfile = (fn, mn, ln, bD) => ({
+// Женские ФИО
+
+const baseFirstNameFemale = [
+  "Светлана",
+  "Снежана",
+  "Ольга",
+  "Диана",
+  "Екатерина",
+  "Елизавета",
+  "Татьяна",
+  "Александра",
+  "Анна",
+  "Наталья",
+  "Ирина",
+  "Маргарита",
+];
+const baseMiddleNameFemale = [
+  "Степановна",
+  "Максимовна",
+  "Геннадьевна",
+  "Владимировна",
+  "Викторовна",
+  "Валерьевна",
+  "Семеновна",
+  "Юрьевна",
+  "Сергеевна",
+  "Дмитриеван",
+  "Владиславовна",
+  "Арсеньевна",
+];
+const baseLastNameFemale = [
+  "Жукова",
+  "Диброва",
+  "Слепакова",
+  "Дмитриева",
+  "Барсукова",
+  "Полякова",
+  "Суховеева",
+  "Грецкая",
+  "Тихановская",
+  "Колесникова",
+  "Гордеева",
+  "Суслова",
+];
+
+const createTemplate = (fn, mn, ln, g, bD) => ({
   firstName: fn,
   middleName: mn,
   lastName: ln,
+  gender: g,
   birthDay: bD,
 });
 
 const getRandom = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
-const generateData = (bFn, bMn, bLn) => {
+const generateProfiles = (quantity, bFn, bMn, bLn, gender) => {
   const profile = [];
-  for (let i = 0; i < 50; i += 1) {
+  for (let i = 0; i < quantity; i += 1) {
     profile.push(
-      createProfile(
+      createTemplate(
         bFn[getRandom(1, bFn.length)],
         bMn[getRandom(1, bMn.length)],
         bLn[getRandom(1, bLn.length)],
+        gender,
         new Date(getRandom(1980, 2002), getRandom(0, 11), getRandom(1, 30))
       )
     );
@@ -69,21 +118,35 @@ const generateData = (bFn, bMn, bLn) => {
   return profile;
 };
 
-const profiles = generateData(baseFirstName, baseMiddleName, baseLastName);
+const profiles = generateProfiles(
+  5,
+  baseFirstNameMale,
+  baseMiddleNameMale,
+  baseLastNameMale,
+  "male"
+).concat(
+  generateProfiles(
+    5,
+    baseFirstNameFemale,
+    baseMiddleNameFemale,
+    baseLastNameFemale,
+    "female"
+  )
+);
 console.log(profiles);
 
 console.log("+++++++++++++++++++++++++++++++++++++++++++");
 
 // 2. Сортировка по ФИО.
 
-const sortName = (a, b) => {
+const sortOperation = (a, b) => {
   if (a.firstName === b.firstName) {
     if (a.middleName === b.middleName) {
-      return a.lastName > b.lastName ? "ask" : "desk";
+      return a.lastName >= b.lastName ? "ask" : "desk";
     }
-    return a.middleName > b.middleName ? "ask" : "desk";
+    return a.middleName >= b.middleName ? "ask" : "desk";
   }
-  return a.firstName > b.firstName ? "ask" : "desk";
+  return a.firstName >= b.firstName ? "ask" : "desk";
 };
 
 const sort = (array, operation, askOrDesk = "ask") => {
@@ -99,7 +162,7 @@ const sort = (array, operation, askOrDesk = "ask") => {
   return array;
 };
 
-console.log(sort(profiles, sortName));
+console.log(sort(profiles, sortOperation));
 
 console.log("+++++++++++++++++++++++++++++++++++++++++++");
 
@@ -133,15 +196,14 @@ const objKeysValuesOutput = (object, title = "здесь мог бы быть з
 objKeysValuesOutput(youngPerson, "Самый молодой человек:");
 objKeysValuesOutput(oldPerson, "Самый старый человек:");
 
-// console.log(youngPerson, oldPerson);
-
 console.log("+++++++++++++++++++++++++++++++++++++++++++");
 
 // 4. Средний возраст.
 
 let sum = 0;
+const todayYear = 2020;
 for (let i = 0; i < profiles.length; i += 1) {
-  const age = 2020 - profiles[i].birthDay.getFullYear();
+  const age = todayYear - profiles[i].birthDay.getFullYear();
   sum += age;
 }
 console.log(`Средний возраст = ${Math.round(sum / profiles.length)}`);
