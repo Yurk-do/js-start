@@ -98,6 +98,10 @@ const createTemplate = (fn, mn, ln, g, bD) => ({
   lastName: ln,
   gender: g,
   birthDay: bD,
+  age() {
+    const today = new Date();
+    return today.getFullYear() - this.birthDay.getFullYear();
+  },
 });
 
 const getRandom = (min, max) => Math.floor(Math.random() * (max - min) + min);
@@ -139,50 +143,44 @@ console.log("+++++++++++++++++++++++++++++++++++++++++++");
 
 // 2. Сортировка по ФИО.
 
-const sortOperation = (a, b) => {
+const sortPeopleName = profiles.sort((a, b) => {
+  if (a.firstName > b.firstName) return 1;
+  if (a.firstName < b.firstName) return -1;
   if (a.firstName === b.firstName) {
+    if (a.middleName > b.middleName) return 1;
+    if (a.middleName < b.middleName) return -1;
     if (a.middleName === b.middleName) {
-      return a.lastName >= b.lastName ? "ask" : "desk";
-    }
-    return a.middleName >= b.middleName ? "ask" : "desk";
-  }
-  return a.firstName >= b.firstName ? "ask" : "desk";
-};
-
-const sort = (array, operation, askOrDesk = "ask") => {
-  for (let i = 0; i < array.length - 1; i += 1) {
-    for (let j = 0; j < array.length - 1 - i; j += 1) {
-      if (operation(array[j], array[j + 1]) === askOrDesk) {
-        const x = array[j];
-        array[j] = array[j + 1];
-        array[j + 1] = x;
-      }
+      if (a.lastName > b.lastName) return 1;
+      if (a.lastName < b.lastName) return -1;
+      return 0;
     }
   }
-  return array;
-};
-
-console.log(sort(profiles, sortOperation));
-
+});
+console.log(sortPeopleName);
 console.log("+++++++++++++++++++++++++++++++++++++++++++");
 
 // 3. Самый молодой и самый старый.
-const operationAge = (a, b) => (a > b ? "old" : "young");
 
-const oldYoungPerson = (array, oldYoung) => {
-  let minMax = array[0].birthDay;
-  let age;
-  for (let i = 1; i < array.length; i += 1) {
-    if (operationAge(minMax, array[i].birthDay) === oldYoung) {
-      minMax = array[i].birthDay;
-      age = array[i];
-    }
-  }
-  return age;
-};
+//  Вариант 1.
 
-const youngPerson = oldYoungPerson(profiles, "young");
-const oldPerson = oldYoungPerson(profiles, "old");
+const sortPeopleAge = profiles.sort((a, b) => {
+  if (a.birthDay > b.birthDay) return 1;
+  if (a.birthDay < b.birthDay) return -1;
+  return 0;
+});
+const old = sortPeopleAge[0];
+const young = sortPeopleAge[sortPeopleAge.length - 1];
+
+// Вариант 2. Самый старый мужчина.
+
+const tooOldMale = profiles
+  .filter((man) => man.gender === "male")
+  .reduce(
+    (acc, man) => (acc.age() > man.age() ? acc : man),
+    profiles.find((man) => man.gender === "male")
+  );
+
+// Функция для приятного вывода.
 
 const objKeysValuesOutput = (object, title = "здесь мог бы быть заголовок") => {
   const a = Object.keys(object);
@@ -193,17 +191,14 @@ const objKeysValuesOutput = (object, title = "здесь мог бы быть з
   }
 };
 
-objKeysValuesOutput(youngPerson, "Самый молодой человек:");
-objKeysValuesOutput(oldPerson, "Самый старый человек:");
+objKeysValuesOutput(old, "Самый молодой человек:");
+objKeysValuesOutput(young, "Самый старый человек:");
+objKeysValuesOutput(tooOldMale, "Самый старый мужчина:");
 
 console.log("+++++++++++++++++++++++++++++++++++++++++++");
 
 // 4. Средний возраст.
 
-let sum = 0;
-const todayYear = 2020;
-for (let i = 0; i < profiles.length; i += 1) {
-  const age = todayYear - profiles[i].birthDay.getFullYear();
-  sum += age;
-}
-console.log(`Средний возраст = ${Math.round(sum / profiles.length)}`);
+const averAge =
+  profiles.reduce((acc, jopa) => acc + jopa.age(), 0) / profiles.length;
+console.log(`Средний возраст = ${Math.round(averAge)}`);
