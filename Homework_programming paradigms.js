@@ -23,12 +23,11 @@ function createEmployee(person, role) {
 
 function calculateAge(person) {
   const today = new Date();
-  if (today.getMonth() <= person.birthDate.getMonth()) {
-    if (today.getDate() < person.birthDate.getDate()) {
-      return today.getFullYear() - person.birthDate.getFullYear() - 1;
-    }
-  }
-  return today.getFullYear() - person.birthDate.getFullYear();
+  return today.getMonth() < person.birthDate.getMonth() ||
+    (today.getMonth() === person.birthDate.getMonth() &&
+      today.getDate() < person.birthDate.getDate())
+    ? today.getFullYear() - person.birthDate.getFullYear() - 1
+    : today.getFullYear() - person.birthDate.getFullYear();
 }
 
 function calculateYearsUntilRetirement(person, ageOfRetirement = 65) {
@@ -70,7 +69,10 @@ function printEmployee(employee) {
 }
 
 const addressBook = [
-  createEmployee(createPerson("John", "Doe", new Date(1970, 7, 8)), Roles.User),
+  createEmployee(
+    createPerson("John", "Doe", new Date(1950, 11, 8)),
+    Roles.User
+  ),
   createEmployee(
     createPerson("Jane", "Doe", new Date(2001, 6, 19)),
     Roles.User
@@ -97,3 +99,5 @@ console.log(`==============================================================`);
 addressBook
   .filter((employee) => calculateYearsUntilRetirement(employee.person) > 0)
   .forEach((employee) => printPerson(employee.person));
+
+console.log(`==============================================================`);
